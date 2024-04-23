@@ -15,7 +15,7 @@ RSpec.describe "Flights Index Page" do
     @p4 = Passenger.create!(name:"bob", age: 13, flights_id: @f1.id)
     
 
-    @f1.passengers << [@p1, @p4]
+    @f1.passengers << [@p1, @p2 ,@p4]
     @f2.passengers << [@p2]
     @f3.passengers << [@p3]
 
@@ -28,21 +28,29 @@ RSpec.describe "Flights Index Page" do
       # When I visit the flights index page
       visit flights_path
       # I see a list of all flight numbers
+      within "#flight-#{@f1.id}" do
       expect(page).to have_content("Flight Number: 1234")
       expect(page).to have_content("Airline: United")
 
       expect(page).to have_content("Passenger Name: Martin")
       expect(page).to have_content("Passenger Name: Rodrigo")
+        
+      end
       # And under each flight number I see the names of all that flight's passengers
-
-      expect(page).to have_content("Flight Number: 4321")
-      expect(page).to have_content("Airline: United")
-      expect(page).to have_content("Passenger Name: Rodrigo")
+      within "#flight-#{@f2.id}" do
+        expect(page).to have_content("Flight Number: 4321")
+        expect(page).to have_content("Airline: United")
+        expect(page).to have_content("Passenger Name: Rodrigo")
+        
+      end
 
       # And next to each flight number I see the name of the Airline of that flight
+      within "#flight-#{@f3.id}" do
+        
       expect(page).to have_content("Flight Number: 5678")
       expect(page).to have_content("Passenger Name: Ezequiel")
       expect(page).to have_content("Airline: United")
+      end
 
     end
   end
