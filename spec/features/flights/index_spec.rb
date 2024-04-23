@@ -11,6 +11,7 @@ RSpec.describe "Flights Index Page" do
     @passenger3 = @flight2.passengers.create!(name: "Luis", age: 17)
     @passenger4 = @flight3.passengers.create!(name: "Cam", age: 74)
     @passenger5 = @flight3.passengers.create!(name: "Baby", age: 35)
+    @flight2.passengers << [@passenger2]
   end
 
   describe 'User Story 1' do
@@ -36,7 +37,29 @@ RSpec.describe "Flights Index Page" do
         expect(page).to have_content("Happy")
         expect(page).to_not have_content("Luis")
       end
-      save_and_open_page
+    end
+  end
+
+  describe 'User Story 2' do
+    it "has a button to remove passenger" do
+      visit flights_path
+
+      within "#flights-#{@flight1.id}" do
+        expect(page).to have_content("Joe")
+        expect(page).to have_content("Happy")
+        expect(page).to_not have_content("Luis")
+
+        expect(page).to have_button("Remove Happy")
+        click_on "Remove Happy"
+        expect(current_path).to eq(flights_path)
+
+        expect(page).to_not have_content("Happy")
+      end     
+      
+      within "#flights-#{@flight2.id}" do
+        expect(page).to have_content("Luis")
+        expect(page).to have_content("Happy")
+      end
     end
   end
 end
