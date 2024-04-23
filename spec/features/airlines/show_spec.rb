@@ -6,18 +6,16 @@ RSpec.describe "Airline show page" do
 
     @f1 = @ar1.flights.create!(number: "1234", date:"01/02/03", departure_city: "Denver", arrival_city: "PVR")
     @f2 = @ar1.flights.create!(number: "4321", date:"01/22/33", departure_city: "Cali", arrival_city: "KC")
-    @f3 = @ar1.flights.create!(number: "5678", date:"01/23/33", departure_city: "Utah", arrival_city: "Denver")
 
     @p1 = Passenger.create!(name:"Martin", age: 21, flights_id: @f1.id)
     @p2 = Passenger.create!(name:"Rodrigo", age: 19, flights_id: @f2.id)
-    @p3 = Passenger.create!(name:"Ezequiel", age: 28, flights_id: @f3.id)
+    @p3 = Passenger.create!(name:"Ezequiel", age: 28, flights_id: @f2.id)
     @p4 = Passenger.create!(name:"bob", age: 8, flights_id: @f1.id)
     @p5 = Passenger.create!(name:"bill", age: 3, flights_id: @f1.id)
     
 
-    @f1.passengers << [@p1, @p4]
-    @f2.passengers << [@p2]
-    @f3.passengers << [@p3, @p5]
+    @f1.passengers << [@p1, @p2, @p4, @p3]
+    @f2.passengers << [@p2, @p1, @p5]
   end
 
   describe '#us3' do
@@ -26,10 +24,11 @@ RSpec.describe "Airline show page" do
       visit airline_path(@ar1.id)
       # Then I see a list of passengers that have flights on that airline
       # And I see that this list is unique (no duplicate passengers)
-      expect(page).to have_content("Passenger Name: Martin")
-      expect(page).to have_content("Passenger Name: Rodrigo")
-      expect(page).to have_content("Passenger Name: Ezequiel")
+      expect(page).to have_content("Passenger Name: Martin", count: 1)
+      expect(page).to have_content("Passenger Name: Rodrigo", count: 1)
+      expect(page).to have_content("Passenger Name: Ezequiel", count: 1)
       # And I see that this list only includes adult passengers.
+      # save_and_open_page
       expect(page).to_not have_content("Passenger Name: bob")
       expect(page).to_not have_content("Passenger Name: billy")
       
