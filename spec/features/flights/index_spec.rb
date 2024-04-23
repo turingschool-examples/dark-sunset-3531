@@ -34,6 +34,7 @@ RSpec.describe "Flights Index Page" do
 
       expect(page).to have_content("Passenger Name: Martin")
       expect(page).to have_content("Passenger Name: Rodrigo")
+      expect(page).to have_content("Passenger Name: bob")
         
       end
       # And under each flight number I see the names of all that flight's passengers
@@ -60,19 +61,34 @@ RSpec.describe "Flights Index Page" do
       # When I visit the flights index page
       visit flights_path
       # Next to each passengers name
-      
-      expect(page).to have_content("Passenger Name: bob")
-      # I see a link or button to remove that passenger from that flight
-      expect(page).to have_button("Remove #{@p4.name}")
+      within "#flight-#{@f1.id}" do
+        
+        expect(page).to have_content("Passenger Name: Martin")
+        expect(page).to have_content("Passenger Name: Rodrigo")
+        expect(page).to have_content("Passenger Name: bob")
+        # I see a link or button to remove that passenger from that flight
+
+        within "#passenger-#{@p2.id}" do
+          expect(page).to have_button("Remove #{@p2.name}")
+            
+          click_on("Remove #{@p2.name}")
+        end
+      end
       # When I click on that link/button
-      click_on("Remove #{@p4.name}")
+
+      within "#flight-#{@f2.id}" do
+        expect(page).to have_content("Passenger Name: Rodrigo")
+      end
       
       
       # I'm returned to the flights index page
       expect(current_path).to eq(flights_path)
       # And I no longer see that passenger listed under that flight,
-      expect(page).to have_content("Passenger Name: Martin")
-      expect(page).to_not have_content("Passenger Name: bob")
+      within "#flight-#{@f1.id}" do
+        expect(page).to have_content("Passenger Name: Martin")
+        expect(page).to_not have_content("Passenger Name: Rodrigo")
+        
+      end
       # And I still see the passenger listed under the other flights they were assigned to.
 
     end
