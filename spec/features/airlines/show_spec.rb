@@ -1,12 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe Airline, type: :model do
-  describe "relationships" do
-    it {should have_many :flights}
-    it {should have_many(:passenger_flights).through(:flights)}
-    it {should have_many(:passengers).through(:passenger_flights)}
-  end
-
+RSpec.describe "Flights Index Page" do
   before(:each) do
     @airline1 = Airline.create!(name: "Southwest")
     @flight1 = Flight.create!(number: "1738", date: "08/03/19", departure_city: "Denver", arrival_city: "Reno", airline_id: @airline1.id)
@@ -20,11 +14,13 @@ RSpec.describe Airline, type: :model do
     @flight2.passengers << [@passenger2]
   end
 
-  describe "instance methods" do
-    describe ".adult_passengers" do
-      it "lists all unique adult passengers on a airline" do
-        expect(@airline1.adult_passengers).to eq([@passenger3, @passenger4, @passenger5])
-      end
+  describe 'User Story 3' do
+    it "displays all unique passengers on a airline" do
+      visit airline_path(@airline1)
+
+      expect(page).to have_content("Luis")
+      expect(page).to have_content("Cam")
+      expect(page).to have_content("Baby")
     end
   end
 end

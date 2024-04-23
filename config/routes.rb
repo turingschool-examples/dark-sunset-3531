@@ -9,4 +9,5 @@ Rails.application.routes.draw do
       delete '/destroy/:passenger_id', action: :destroy, as: 'destroy'
     end
   end
+  resources :airlines, only: [:show]
 end
