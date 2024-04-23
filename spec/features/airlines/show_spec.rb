@@ -11,16 +11,16 @@ RSpec.describe "Flights Index Page" do
     @passenger3 = @flight2.passengers.create!(name: "Luis", age: 18)
     @passenger4 = @flight3.passengers.create!(name: "Cam", age: 74)
     @passenger5 = @flight3.passengers.create!(name: "Baby", age: 35)
-    @flight2.passengers << [@passenger2]
+    @flight2.passengers << [@passenger2, @passenger4, @passenger5]
   end
 
   describe 'User Story 3' do
     it "displays all unique passengers on a airline" do
       visit airline_path(@airline1)
-
-      expect(page).to have_content("Luis")
-      expect(page).to have_content("Cam")
-      expect(page).to have_content("Baby")
+   
+      expect(page).to have_content("Luis", count: 1)
+      expect(page).to have_content("Cam", count: 1 )
+      expect(page).to have_content("Baby", count: 1)
     end
   end
 end

@@ -17,7 +17,8 @@ RSpec.describe Airline, type: :model do
     @passenger3 = @flight2.passengers.create!(name: "Luis", age: 18)
     @passenger4 = @flight3.passengers.create!(name: "Cam", age: 74)
     @passenger5 = @flight3.passengers.create!(name: "Baby", age: 35)
-    @flight2.passengers << [@passenger2]
+    @flight2.passengers << [@passenger2, @passenger4, @passenger5]
+
   end
 
   describe "instance methods" do

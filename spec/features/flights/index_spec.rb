@@ -18,23 +18,45 @@ RSpec.describe "Flights Index Page" do
     it "displays all flight numbers" do
       visit flights_path
 
-      expect(page).to have_content("1738")
-      expect(page).to have_content("1314")
-      expect(page).to have_content("1690")
+      expect(page).to have_content("Flight Number: 1738")
+      expect(page).to have_content("Flight Number: 1314")
+      expect(page).to have_content("Flight Number: 1690")
     end
 
-    it "displays airline of flight" do
+    it "displays airline of each flight" do
       visit flights_path
 
-      expect(page).to have_content("Southwest") 
+      within "#flights-#{@flight1.id}" do
+        expect(page).to have_content("Southwest") 
+      end
+
+      within "#flights-#{@flight2.id}" do
+        expect(page).to have_content("Southwest") 
+      end
+
+      within "#flights-#{@flight3.id}" do
+        expect(page).to have_content("Southwest") 
+      end
     end
 
-    it "displays flight's passengers" do
+    it "displays each flight's passengers" do
       visit flights_path
 
       within "#flights-#{@flight1.id}" do
         expect(page).to have_content("Joe")
         expect(page).to have_content("Happy")
+        expect(page).to_not have_content("Luis")
+      end
+
+      within "#flights-#{@flight2.id}" do
+        expect(page).to have_content("Luis")
+        expect(page).to have_content("Happy")
+        expect(page).to_not have_content("Cam")
+      end
+
+      within "#flights-#{@flight3.id}" do
+        expect(page).to have_content("Cam")
+        expect(page).to have_content("Baby")
         expect(page).to_not have_content("Luis")
       end
     end
@@ -45,15 +67,16 @@ RSpec.describe "Flights Index Page" do
       visit flights_path
 
       within "#flights-#{@flight1.id}" do
-        expect(page).to have_content("Joe")
-        expect(page).to have_content("Happy")
-        expect(page).to_not have_content("Luis")
+        expect(page).to have_button("Joe")
+        expect(page).to have_button("Happy")
+        expect(page).to_not have_button("Luis")
 
         expect(page).to have_button("Remove Happy")
         click_on "Remove Happy"
         expect(current_path).to eq(flights_path)
 
         expect(page).to_not have_content("Happy")
+        expect(page).to_not have_button("Happy")
       end     
       
       within "#flights-#{@flight2.id}" do
